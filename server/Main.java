@@ -1,14 +1,13 @@
 package server;
 
 
+import java.io.IOException;
+
 public class Main {
 
-    public static void main(String[] args) {
-        FileServer server = new FileServer();
-        System.out.println("Server started!");
-        server.start();
-        System.out.println(server.read());
-        System.out.println(server.send());
-        server.close();
+
+    public static void main(String[] args) throws IOException {
+       FileServerInterface fileServerInterface = new FileServerInterface();
+       fileServerInterface.run();
     }
 }

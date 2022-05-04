@@ -39,17 +39,18 @@ public class FileServer {
 
    String read() {
        try {
-           return "Received: " + input.readUTF();
+
+           return input.readUTF();
        } catch (IOException e) {
            e.printStackTrace();
            return "Error while reading!";
        }
    }
 
-   String send() {
+   String send(String msg) {
        try {
-           output.writeUTF("All files were sent!");
-           return "Sent: All files were sent!";
+           output.writeUTF(msg);
+           return "Sent: " + msg;
        } catch (IOException e) {
            e.printStackTrace();
            return "Problem while sending!";
