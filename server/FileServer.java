@@ -1,45 +1,69 @@
 package server;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class FileServer {
-    int capacity;
-    Map<String, Boolean> files;
+    String address = "127.0.0.1";
+    int port = 2222;
+    ServerSocket serverSocket;
+    Socket socket;
+    DataInputStream input;
+    DataOutputStream output;
+
 
     public FileServer() {
-        this.capacity = 10;
-        files = generateMap();
-    }
-
-    private Map<String, Boolean> generateMap() {
-      Map<String, Boolean> map = new HashMap<>();
-        for (int i = 1; i < 11; i++) {
-            map.put("file" + i, false);
+        try {
+            serverSocket = new ServerSocket(port, 50, InetAddress.getByName(address));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return map;
     }
 
-    boolean add(String name) {
-        if (files.containsKey(name) && !files.get(name)) {
-            files.put(name, true);
-            return true;
+    String start() {
+        try {
+            socket = serverSocket.accept();
+            input = new DataInputStream(socket.getInputStream());
+            output = new DataOutputStream(socket.getOutputStream());
+            return "Server started!";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Problem with server start!";
         }
-        return false;
     }
 
-    boolean get(String name) {
-        return files.get(name);
-    }
+   String read() {
+       try {
+           return "Received: " + input.readUTF();
+       } catch (IOException e) {
+           e.printStackTrace();
+           return "Error while reading!";
+       }
+   }
 
-    boolean delete(String name) {
-        if (files.containsKey(name) && files.get(name)) {
-            files.put(name, false);
-            return true;
-        }
-        return false;
-    }
+   String send() {
+       try {
+           output.writeUTF("All files were sent!");
+           return "Sent: All files were sent!";
+       } catch (IOException e) {
+           e.printStackTrace();
+           return "Problem while sending!";
+       }
+   }
+
+   void close() {
+       try {
+           serverSocket.close();
+           socket.close();
+           input.close();
+           output.close();
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+   }
 }
