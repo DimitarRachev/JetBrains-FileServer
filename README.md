@@ -1,2 +1,2 @@
-# JetBrains-FileServer
+# JetBrainsAcademy-FileServer
  
