@@ -27,7 +27,6 @@ public class FileServerInterface implements Runnable {
         while (true) {
             server.start();
             executor.submit(this::actionLogic);
-//            actionLogic();
         }
     }
 
@@ -97,7 +96,6 @@ public class FileServerInterface implements Runnable {
                         root = server.getById(id);
                         break;
                     default:
-                        //todo check for better way to fix "may not be initialized" problem
                         root = Path.of("./nonExistingFile.txt");
                         break;
                 }

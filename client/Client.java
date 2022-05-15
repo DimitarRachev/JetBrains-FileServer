@@ -29,10 +29,7 @@ public class Client {
             output.writeInt(fileBytes.length);
             output.write(fileBytes);
             //TODo why I put this here? leftover? also is there a  fix for duplicating code in client and server?
-//            int size = 0;
-//            output.writeInt(size);
             output.flush();
-//            output.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

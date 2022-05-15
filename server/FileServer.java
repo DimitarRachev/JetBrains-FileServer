@@ -147,8 +147,6 @@ public class FileServer {
             byte[] fileBytes = fileStream.readAllBytes();
             output.writeInt(fileBytes.length);
             output.write(fileBytes);
-//            int size = 0;
-//            output.writeInt(size);
             output.flush();
             output.close();
             return true;
