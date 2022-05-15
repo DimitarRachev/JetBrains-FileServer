@@ -1,10 +1,9 @@
 package client;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.file.Path;
 
 public class Client {
     String address = "127.0.0.1";
@@ -23,6 +22,22 @@ public class Client {
         }
     }
 
+    void sendMsg(File file) {
+        try {
+            InputStream fileStream = new BufferedInputStream(new FileInputStream(file));
+            byte[] fileBytes = fileStream.readAllBytes();
+            output.writeInt(fileBytes.length);
+            output.write(fileBytes);
+            //TODo why I put this here? leftover? also is there a  fix for duplicating code in client and server?
+//            int size = 0;
+//            output.writeInt(size);
+            output.flush();
+//            output.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     void sendMsg(String msg) {
         try {
             output.writeUTF(msg);
@@ -36,7 +51,7 @@ public class Client {
         try {
             return input.readUTF();
         } catch (IOException e) {
-           return e.toString();
+            return e.toString();
         }
     }
 
@@ -48,5 +63,31 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public byte[] receiveFile() {
+        int size = 0;
+        try {
+            size = input.readInt();
+            byte[] fileBytes = new byte[size];
+            input.read(fileBytes);
+            return fileBytes;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean saveFile(Path path, byte[] fileBytes) {
+        try {
+            path.toFile().createNewFile();
+            FileOutputStream fileOutputStream = new FileOutputStream(path.toFile());
+            fileOutputStream.write(fileBytes);
+            fileOutputStream.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
